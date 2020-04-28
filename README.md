@@ -16,3 +16,11 @@ The number of lives your programm has scales with the difficulty of the game. Al
 |Hostile types  |coming soon|
 |coins  |per eliminated enemy|
 |design  |different 2D maps, fixed route where enemies run|
+
+## Implementation
+|  |  |
+|--|--|
+|Language|Java  |
+|Framework|[libGDX](https://libgdx.badlogicgames.com/) |
+|IDEA|IntelliJ |
+
