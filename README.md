@@ -42,3 +42,6 @@ ideas: string, arrays, 5d array
 |Language|Java  |
 |Framework|[libGDX](https://libgdx.badlogicgames.com/) |
 |IDEA|IntelliJ |
+
+## TODO
+upgrades for all allies types + description, remove refund, all hostile types, special abilities 
