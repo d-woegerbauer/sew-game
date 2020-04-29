@@ -22,13 +22,13 @@ The number of lives your programm has scales with the difficulty of the game. Al
 Here are the different types of allies listed
 |names|type|costs|ability|weapon|damage|radius|delay in ms|image|
 |--|--|--|--|--|--|--|--|--|--|
-|byte|  |50|-|arrow|50|  |500|  |
-|boolean|  |75|-|shotgun|110|  |1000|  |
-|char|  |150|-20%|slows down enemy speed|50|  |200|  |
-|integer|  |120|sees private exceptions|long range arrow|80  |  |500|  |
-|short|  |225|short range|pumpgun  |300  |very short  |500  |  |
-|float|  |300|poison damage|highspeed   |50|  |750  |  |
-|long|  |500|morter|more range - more damage  |1000/number of enemies in range|infinite|3000||
+|byte|-|50|-|arrow|50|-  |500|-  |
+|boolean|-  |75|-|shotgun|110|-  |1000|-  |
+|char|-  |150|-20%|slows down enemy speed|50|-  |200|-  |
+|integer|-  |120|sees private exceptions|long range arrow|80  |-  |500|-  |
+|short|-  |225|short range|pumpgun  |300  |very short  |500  |-  |
+|float|-  |300|poison damage|highspeed   |50|-  |750  |-  |
+|long|-  |500|morter|more range - more damage  |1000/number of enemies in range|infinite|3000|-|
 more coming soon
 
 ideas: string, arrays, 5d array
