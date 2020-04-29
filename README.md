@@ -10,6 +10,9 @@ In our game the allies are the "debuggers" and the hostiles are the "errors". Af
 
 The number of lives your programm has scales with the difficulty of the game. Also the health of the enemies increases.
 
+## Map preview
+![First preview map](https://raw.githubusercontent.com/dav-prog/sew-game/master/maps/finished%20maps/Ice%20Map%20-%20Test/map-test.png)
+
 ## Details
 |subject|details|
 |--|--|
