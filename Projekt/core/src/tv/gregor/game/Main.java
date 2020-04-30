@@ -1,5 +1,7 @@
 package tv.gregor.game;
+
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,58 +12,48 @@ import tv.gregor.game.GameMaps.CustomGameMap;
 import tv.gregor.game.GameMaps.GameMap;
 import tv.gregor.game.GameMaps.TileType;
 import tv.gregor.game.GameMaps.TiledGameMap;
+import tv.gregor.game.screens.GameScreen;
+import tv.gregor.game.screens.MainMenuScreen;
 
-import java.util.Vector;
 
+public class Main extends Game {
 
-public class Main extends ApplicationAdapter {
+    public static final int WIDTH = 1280;
+    public static final int HEIGHT = 720;
+
+    public SpriteBatch batch;
+
 	OrthographicCamera cam;
-	SpriteBatch batch;
-	Texture img;
-	GameMap gameMap;
 
-	
-	@Override
-	public void create () {
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+    GameMap gameMap;
 
-		cam = new OrthographicCamera();
-		cam.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.update();
 
-		gameMap = new CustomGameMap();
-	}
+    @Override
+    public void create() {
+        batch = new SpriteBatch();
 
-	@Override
-	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        this.setScreen(new MainMenuScreen(this));
 
-		if(Gdx.input.isTouched()){
-			cam.translate(-Gdx.input.getDeltaX(),Gdx.input.getDeltaY());
-			cam.update();
-		}
+        float w = Gdx.graphics.getWidth();
+        float h = Gdx.graphics.getHeight();
 
-		if (Gdx.input.justTouched()){
-			Vector3 pos = cam.unproject(new Vector3(Gdx.input.getX(),Gdx.input.getY(),0));
-			TileType type = gameMap.getTileTypeByLocation(1,pos.x,pos.y);
+        cam = new OrthographicCamera();
+        cam.setToOrtho(false, w, h);
+        cam.update();
 
-			if(type != null){
-				System.out.println("You clicked on tile with id "+ type.getId() + " "+ type.getName() + " "+ type.isCollidable()+" " + type.getDamage());
-			}
-		}
+        gameMap = new CustomGameMap();
+    }
 
-		gameMap.render(cam);
+    @Override
+    public void render() {
+    	super.render();
 
-		//batch.begin();
-		//batch.draw(img, 0, 0);
-		//batch.end();
-	}
-	
-	@Override
-	public void dispose () {
-		batch.dispose();
-		img.dispose();
-	}
+
+    }
+
+    @Override
+    public void dispose() {
+        batch.dispose();
+        gameMap.dispose();
+    }
 }
