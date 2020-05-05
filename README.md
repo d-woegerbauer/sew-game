@@ -8,7 +8,7 @@ Towerdefense is a real time strategy game. In which you have to defend your towe
 
 In our game the allies are the "debuggers" and the hostiles are the "errors". After every 20 round there will be a final enemy, which is stronger than the other enemies. This enemy is named after a not popular programming languages. If a certain number of errors reach your programm(tower) you lose. There are four different difficulties: easy, medium, hard, undebugable.
 
-The number of lives your programm has scales with the difficulty of the game. Also the health of the enemies increases.
+The number of lives your program has scales with the difficulty of the game. Also the health of the enemies increases.
 
 ## Map preview
 ![First preview map](https://raw.githubusercontent.com/dav-prog/sew-game/master/maps/finished%20maps/Ice%20Map%20-%20Test/map-test.png)
