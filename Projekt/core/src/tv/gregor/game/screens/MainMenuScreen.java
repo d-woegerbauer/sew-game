@@ -35,28 +35,35 @@ public class MainMenuScreen implements Screen {
     @Override
     public void render(float delta) {
 
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         game.batch.begin();
-
+        //Exit Button
         int x = Gdx.graphics.getWidth() / 2 - EXIT_BUTTON_WIDTH / 2;
         int y = Gdx.graphics.getHeight() / 3 - EXIT_BUTTON_HEIGHT;
         if (Gdx.input.getX() < x + EXIT_BUTTON_WIDTH && Gdx.input.getX() > x && Main.HEIGHT - Gdx.input.getY() < y + EXIT_BUTTON_HEIGHT && Main.HEIGHT - Gdx.input.getY() > y) {
             game.batch.draw(exitButtonActive, x, y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
+            if (Gdx.input.isTouched()) {
+                Gdx.app.exit();
+            }
         } else {
             game.batch.draw(exitButtonInactive, x, y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
         }
 
+        // Play Button
         int x2 = Gdx.graphics.getWidth() / 2 - PLAY_BUTTON_WIDTH / 2;
         int y2 = Gdx.graphics.getHeight() * 2 / 3 - PLAY_BUTTON_HEIGHT;
 
         if (Gdx.input.getX() < x2 + PLAY_BUTTON_WIDTH && Gdx.input.getX() > x2 && Main.HEIGHT - Gdx.input.getY() < y2 + PLAY_BUTTON_HEIGHT && Main.HEIGHT - Gdx.input.getY() > y2) {
             game.batch.draw(playButtonActive, x2, y2, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
+            if (Gdx.input.isTouched()) {
+                this.dispose();
+                game.setScreen(new GameScreen(game));
+            }
         } else {
             game.batch.draw(playButtonInactive, x2, y2, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
         }
-
 
         game.batch.end();
 
