@@ -44,7 +44,7 @@ public class CustomGameMapLoader {
 
         Random random = new Random();
 
-        for (int row = 0; row < SIZE; row++) {
+        /*for (int row = 0; row < SIZE; row++) {
             for (int col = 0; col < SIZE; col++) {
                 mapData.map[0][row][col] = TileType.SKY.getId();
 
@@ -62,7 +62,7 @@ public class CustomGameMapLoader {
                 }
             }
         }
-
+        */
         return mapData;
     }
 

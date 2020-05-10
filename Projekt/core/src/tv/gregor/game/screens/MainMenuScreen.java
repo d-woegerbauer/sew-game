@@ -13,6 +13,7 @@ public class MainMenuScreen implements Screen {
     private static final int PLAY_BUTTON_WIDTH = 330;
     private static final int PLAY_BUTTON_HEIGHT = 150;
 
+    public static float SPAWN_TIME;
     Main game;
     Texture playButtonActive;
     Texture playButtonInactive;
@@ -21,6 +22,7 @@ public class MainMenuScreen implements Screen {
 
     public MainMenuScreen(Main game) {
         this.game = game;
+        SPAWN_TIME = 1.2f;
         playButtonActive = new Texture("play_button_active.png");
         playButtonInactive = new Texture("play_button_inactive.png");
         exitButtonActive = new Texture("exit_button_active.png");
@@ -86,11 +88,17 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void hide() {
-
+        playButtonActive.dispose();
+        playButtonInactive.dispose();
+        exitButtonActive.dispose();
+        exitButtonInactive.dispose();
     }
 
     @Override
     public void dispose() {
-
+        playButtonActive.dispose();
+        playButtonInactive.dispose();
+        exitButtonActive.dispose();
+        exitButtonInactive.dispose();
     }
 }

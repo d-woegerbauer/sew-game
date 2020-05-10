@@ -5,12 +5,17 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import tv.gregor.game.Main;
 
 public class DesktopLauncher {
+
+
+
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.foregroundFPS = 60;
 		config.backgroundFPS = 30;
 		config.width = Main.WIDTH;
 		config.height = Main.HEIGHT;
+		config.resizable = false;
+		config.fullscreen = true;
 
 		new LwjglApplication(new Main(), config);
 	}

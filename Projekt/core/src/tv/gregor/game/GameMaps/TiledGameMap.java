@@ -9,10 +9,11 @@ public class TiledGameMap extends GameMap{
 
     TiledMap tiledMap;
     OrthogonalTiledMapRenderer tiledMapRenderer;
+    float unitScale = 1/16f;
 
     public TiledGameMap(){
         tiledMap = new TmxMapLoader().load("map.tmx");
-        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap,1 /16f);
     }
 
     @Override
