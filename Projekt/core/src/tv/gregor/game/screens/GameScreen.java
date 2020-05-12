@@ -20,6 +20,7 @@ import tv.gregor.game.PositionsMap01;
 import tv.gregor.game.entities.Bug01;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class GameScreen implements Screen {
 
@@ -46,11 +47,12 @@ public class GameScreen implements Screen {
     private float BaseHealth = 100;
 
     long lastTimeCountedFPS;
-    long lastTimeCountedMob;
+    long lastTimeCountedRound;
 
     private float sinceChangeFPS;
-    private float sinceChangeMob;
+    private float sinceChangeTime;
     private float frameRate;
+    private boolean isDone;
     private BitmapFont font;
 
     float charX, charY;
@@ -70,23 +72,23 @@ public class GameScreen implements Screen {
 
     public GameScreen(Main game) {
         this.game = game;
+        isDone = false;
         lastTimeCountedFPS = TimeUtils.millis();
-        lastTimeCountedMob = TimeUtils.millis();
+        lastTimeCountedRound = TimeUtils.millis();
         sinceChangeFPS = 0;
-        sinceChangeMob = 0;
+        sinceChangeTime = 0;
         frameRate = Gdx.graphics.getFramesPerSecond();
         font = new BitmapFont();
-
+        font.getData().setScale(1.2f);
 
         charY = Main.HEIGHT / 2 - CHAR_HEIGHT / 2;
         charX = Main.WIDTH / 2 - CHAR_WIDTH / 2;
 
         positions = new Vector2[]{
-                new Vector2(Gdx.graphics.getWidth(), 14*16f),
-                new Vector2(44*16f, 14*16f),
-                new Vector2(44*16f, Gdx.graphics.getHeight())
+                new Vector2(Gdx.graphics.getWidth(), 14 * 16f),
+                new Vector2(44 * 16f, 14 * 16f),
+                new Vector2(44 * 16f, Gdx.graphics.getHeight())
         };
-
 
 
         roll = 2;
@@ -105,9 +107,7 @@ public class GameScreen implements Screen {
         renderer = new OrthogonalTiledMapRenderer(map);
 
         enemies = new ArrayList<>();
-        for (int i = 0; i < 200; i++) {
-            enemies.add(new PositionsMap01(new Bug01(positions[0].x+i*40, positions[0].y, 1)));
-        }
+        createNewEnemies(50);
 
 
         cam.setToOrtho(false, w, h);
@@ -128,6 +128,12 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        long time = TimeUtils.timeSinceMillis(lastTimeCountedRound);
+        lastTimeCountedRound = TimeUtils.millis();
+
+
+        sinceChangeTime += time;
+
         stateTime += delta;
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -142,15 +148,33 @@ public class GameScreen implements Screen {
         game.batch.begin();
 
         game.batch.draw(rolls[roll].getKeyFrame(stateTime, true), charX, charY, CHAR_WIDTH, CHAR_HEIGHT);
+        if (enemies.isEmpty()) {
+            isDone = true;
+        }
+
+        for (Iterator<PositionsMap01> iter = enemies.iterator(); iter.hasNext(); ) {
+            PositionsMap01 it = iter.next();
+            if (it.isPositionEnd()) {
+                iter.remove();
+            }
+        }
 
 
-
-        for (PositionsMap01 enemy : enemies) {
-               showEnemy(enemy);
+        if (!isDone) {
+            for (PositionsMap01 enemy : enemies) {
+                showEnemy(enemy);
+            }
+        } else {
+            if (sinceChangeTime > 1000) {
+                sinceChangeTime = 0;
+                isDone = false;
+                createNewEnemies(50);
+            }
         }
 
         showFPS();
         font.draw(game.batch, (int) frameRate + " fps", 3, Gdx.graphics.getHeight() - 3);
+        font.draw(game.batch, BaseHealth + " hp", 100, Gdx.graphics.getHeight() - 3);
         game.batch.end();
     }
 
@@ -191,6 +215,12 @@ public class GameScreen implements Screen {
         }
     }
 
+    public void createNewEnemies(int count) {
+        for (int i = 0; i < count; i++) {
+            enemies.add(new PositionsMap01(new Bug01(positions[0].x + i * 40, positions[0].y, 1)));
+        }
+    }
+
     public void showEnemy(PositionsMap01 enemy) {
         if (enemy.getEnemyType() instanceof Bug01) {
 
@@ -201,8 +231,11 @@ public class GameScreen implements Screen {
                 if (enemy.isPosition1()) {
                     bug01.changePos(0, bug01.getSpeed() * Gdx.graphics.getDeltaTime());
                     if (bug01.getPos().y >= positions[2].y) {
+                        System.out.println("test");
                         bug01.setPos(new Vector2(positions[2].x, positions[2].y));
                         enemy.setPositionEnd(true);
+                        this.BaseHealth -= bug01.getDamage();
+
                     }
 
                 } else {
@@ -214,10 +247,9 @@ public class GameScreen implements Screen {
                 }
 
                 bug01.render(game.batch);
-            } else {
-                this.BaseHealth -= bug01.getDamage();
             }
 
         }
     }
+
 }
