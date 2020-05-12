@@ -105,8 +105,8 @@ public class GameScreen implements Screen {
         renderer = new OrthogonalTiledMapRenderer(map);
 
         enemies = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            enemies.add(new PositionsMap01(new Bug01(positions[0].x+i*100, positions[0].y, 1)));
+        for (int i = 0; i < 200; i++) {
+            enemies.add(new PositionsMap01(new Bug01(positions[0].x+i*40, positions[0].y, 1)));
         }
 
 
@@ -128,75 +128,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            charX -= SPEED * Gdx.graphics.getDeltaTime();
-            if (charX < 0)
-                charX = 0;
-
-            //Update roll if button just clicked
-            if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && !Gdx.input.isKeyPressed(Input.Keys.RIGHT) && roll > 0) {
-                rollTimer = 0;
-                roll--;
-            }
-            //add roll
-            rollTimer -= Gdx.graphics.getDeltaTime();
-            if (Math.abs(rollTimer) > ROLL_TIMER_SWITCH_TIME && roll > 0) {
-                rollTimer = 0;
-                roll--;
-            }
-        } else {
-            if (roll < 2) {
-                //update roll to make it go back to center
-                rollTimer += Gdx.graphics.getDeltaTime();
-                if (Math.abs(rollTimer) > ROLL_TIMER_SWITCH_TIME) {
-                    rollTimer = 0;
-                    roll++;
-
-                    if (roll > 4) roll = 4;
-                }
-            }
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            charX += SPEED * Gdx.graphics.getDeltaTime();
-
-            if (charX + CHAR_WIDTH > Gdx.graphics.getWidth())
-                charX = Gdx.graphics.getWidth() - CHAR_WIDTH;
-
-            //add roll
-            rollTimer += Gdx.graphics.getDeltaTime();
-            if (Math.abs(rollTimer) > ROLL_TIMER_SWITCH_TIME && roll < 4) {
-                rollTimer = 0;
-                roll++;
-            }
-        } else {
-            if (roll > 2) {
-                rollTimer -= Gdx.graphics.getDeltaTime();
-                if (Math.abs(rollTimer) > ROLL_TIMER_SWITCH_TIME && roll > 0) {
-                    rollTimer = 0;
-                    roll--;
-
-                    if (roll < 0) roll = 0;
-                }
-            }
-        }
-
-
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            charY -= SPEED * Gdx.graphics.getDeltaTime();
-
-            if (charY < 0)
-                charY = 0;
-
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            charY += SPEED * Gdx.graphics.getDeltaTime();
-            if (charY + CHAR_HEIGHT > Gdx.graphics.getHeight())
-                charY = Gdx.graphics.getHeight() - CHAR_HEIGHT;
-
-        }
-
         stateTime += delta;
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -212,11 +143,10 @@ public class GameScreen implements Screen {
 
         game.batch.draw(rolls[roll].getKeyFrame(stateTime, true), charX, charY, CHAR_WIDTH, CHAR_HEIGHT);
 
+
+
         for (PositionsMap01 enemy : enemies) {
                showEnemy(enemy);
-        }
-        if(!hasLoaded){
-            hasLoaded = true;
         }
 
         showFPS();
@@ -259,18 +189,6 @@ public class GameScreen implements Screen {
             sinceChangeFPS = 0;
             frameRate = Gdx.graphics.getFramesPerSecond();
         }
-    }
-
-    public boolean hasTimePassed(float time) {
-        long delta = TimeUtils.timeSinceMillis(lastTimeCountedMob);
-        lastTimeCountedMob = TimeUtils.millis();
-        sinceChangeMob += delta;
-
-        if (sinceChangeMob >= 1000+time) {
-            changeTime++;
-            return true;
-        }
-        return false;
     }
 
     public void showEnemy(PositionsMap01 enemy) {

@@ -15,11 +15,11 @@ public class Bug01 implements EnemyType {
     float height = 30;
     Texture image;
 
-
     float speed = 200;
 
+
     public Bug01(float x, float y, float healthFactor) {
-        this.image = new Texture("1477179.png");
+        this.image = new Texture("bug01.png");
         this.health *= healthFactor;
 
         pos = new Vector2(x, y);
