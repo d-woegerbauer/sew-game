@@ -1,11 +1,9 @@
 package tv.gregor.game.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -24,14 +22,9 @@ import java.util.Iterator;
 
 public class GameScreen implements Screen {
 
-    public static final float SPEED = 500;
-
-    public static final float ANIMATION_SPEED = 0.5f;
-
     public static final int CHAR_WIDTH_PIXEL = 17;
     public static final int CHAR_HEIGHT_PIXEL = 32;
 
-    public static final float ROLL_TIMER_SWITCH_TIME = 0.15f;
 
     public static final int CHAR_WIDTH = CHAR_WIDTH_PIXEL * 3;
     public static final int CHAR_HEIGHT = CHAR_HEIGHT_PIXEL * 3;
@@ -64,11 +57,7 @@ public class GameScreen implements Screen {
     TiledMap map;
     ArrayList<PositionsMap01> enemies;
 
-    float changeTime = 0;
-
     Main game;
-
-    private boolean hasLoaded = false;
 
     public GameScreen(Main game) {
         this.game = game;
@@ -95,8 +84,6 @@ public class GameScreen implements Screen {
         rollTimer = 0;
         rolls = new Animation[5];
 
-        TextureRegion[][] rollSpriteSheet = TextureRegion.split(new Texture("ship.png"), CHAR_WIDTH_PIXEL, CHAR_HEIGHT_PIXEL);
-
 
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
@@ -113,11 +100,6 @@ public class GameScreen implements Screen {
         cam.setToOrtho(false, w, h);
         cam.update();
 
-        rolls[0] = new Animation(ANIMATION_SPEED, rollSpriteSheet[2]);
-        rolls[1] = new Animation(ANIMATION_SPEED, rollSpriteSheet[1]);
-        rolls[2] = new Animation(ANIMATION_SPEED, rollSpriteSheet[0]);
-        rolls[3] = new Animation(ANIMATION_SPEED, rollSpriteSheet[3]);
-        rolls[4] = new Animation(ANIMATION_SPEED, rollSpriteSheet[4]);
 
     }
 
@@ -147,7 +129,6 @@ public class GameScreen implements Screen {
 
         game.batch.begin();
 
-        game.batch.draw(rolls[roll].getKeyFrame(stateTime, true), charX, charY, CHAR_WIDTH, CHAR_HEIGHT);
         if (enemies.isEmpty()) {
             isDone = true;
         }
@@ -235,7 +216,8 @@ public class GameScreen implements Screen {
                         bug01.setPos(new Vector2(positions[2].x, positions[2].y));
                         enemy.setPositionEnd(true);
                         this.BaseHealth -= bug01.getDamage();
-
+                        if (this.BaseHealth < 0)
+                            this.BaseHealth = 0;
                     }
 
                 } else {
