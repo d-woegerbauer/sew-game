@@ -1,4 +1,4 @@
-package tv.gregor.game;
+package tv.gregor.game.pathhelper;
 
 import tv.gregor.game.entities.Bug01;
 import tv.gregor.game.entities.EnemyType;
@@ -31,5 +31,9 @@ public class PositionsMap01 {
 
     public EnemyType getEnemyType() {
         return bug01;
+    }
+
+    public boolean isDead(){
+        return this.bug01.isDead();
     }
 }
