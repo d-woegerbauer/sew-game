@@ -310,10 +310,19 @@ public class GameScreen implements Screen {
                 }
             }
 
+            for (TurretType temp: turrets) {
+                if(temp instanceof Turret01) {
+                    Turret01 temp2 = (Turret01) temp;
+                    if (temp2.isInside(x, y, 50, 50)) {
+                        isNotValid = true;
+                        break;
+                    }
+                }
+            }
+
             if(!isNotValid) {
                 turretChosen = false;
                 if (turretType == 1) {
-                    System.out.println("test");
                     turrets.add(new Turret01(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25, 0));
 
                 }
@@ -324,7 +333,17 @@ public class GameScreen implements Screen {
     public void showTurret(TurretType turretType){
         if(turretType instanceof Turret01){
             Turret01 turret01 = (Turret01) turretType;
-
+            if(!turret01.hasEnemy()){
+                for (PositionsMap01 enemy : enemies) {
+                    if(enemy.getEnemyType() instanceof Bug01){
+                        Bug01 bug01 = (Bug01) enemy.getEnemyType();
+                        Vector2 posBug01 = bug01.getPos();
+                        if(posBug01.dst(turret01.getPos())<= turret01.getRange()){
+                            turret01.setEnemy(bug01);
+                        }
+                    }
+                }
+            }
             turret01.render(game.batch);
         }
     }
