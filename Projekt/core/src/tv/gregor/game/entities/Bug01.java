@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Bug01 implements EnemyType {
 
     Vector2 pos;
-    float health = 13;
+    float health = 25;
     float damage = 10;
     float width = 50;
     float height = 50;

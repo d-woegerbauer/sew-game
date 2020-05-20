@@ -17,9 +17,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 import tv.gregor.game.GameMaps.GameMap;
 import tv.gregor.game.Main;
+import tv.gregor.game.entities.Bug01;
 import tv.gregor.game.pathhelper.PathArea;
 import tv.gregor.game.pathhelper.PositionsMap01;
-import tv.gregor.game.entities.Bug01;
 import tv.gregor.game.turrets.Turret01;
 import tv.gregor.game.turrets.TurretType;
 
@@ -51,16 +51,16 @@ public class GameScreen implements Screen {
     private float sinceChangeTime;
     private float frameRate;
     private boolean isDone;
-    private BitmapFont font;
-    private FreeTypeFontGenerator generator;
-    private FreeTypeFontGenerator.FreeTypeFontParameter parameter;
+    private final BitmapFont font;
+    private final FreeTypeFontGenerator generator;
+    private final FreeTypeFontGenerator.FreeTypeFontParameter parameter;
     Texture turretTexture;
     private int turretType;
-    private ArrayList<PathArea> path;
+    private final ArrayList<PathArea> path;
 
     private boolean turretChosen;
 
-    private ShapeRenderer shape;
+    private final ShapeRenderer shape;
     private boolean showBuyMenu;
 
     float charX, charY;
@@ -78,7 +78,7 @@ public class GameScreen implements Screen {
 
 
         turretChosen = false;
-        showBuyMenu = false;
+        showBuyMenu = true;
         shape = new ShapeRenderer();
 
         isDone = false;
