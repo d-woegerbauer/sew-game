@@ -1,12 +1,17 @@
 package tv.gregor.game.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -16,6 +21,9 @@ import tv.gregor.game.GameMaps.GameMap;
 import tv.gregor.game.Main;
 import tv.gregor.game.PositionsMap01;
 import tv.gregor.game.entities.Bug01;
+import tv.gregor.game.pathhelper.PathArea;
+import tv.gregor.game.turrets.Turret01;
+import tv.gregor.game.turrets.TurretType;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -42,6 +50,8 @@ public class GameScreen implements Screen {
     long lastTimeCountedFPS;
     long lastTimeCountedRound;
 
+    boolean showShop;
+
     private float sinceChangeFPS;
     private float sinceChangeTime;
     private float frameRate;
@@ -53,13 +63,29 @@ public class GameScreen implements Screen {
     float stateTime;
     float rollTimer;
 
+    boolean isTurretChosen;
+    ArrayList<PathArea> path;
     OrthogonalTiledMapRenderer renderer;
     TiledMap map;
     ArrayList<PositionsMap01> enemies;
 
+    FreeTypeFontGenerator.FreeTypeFontParameter parameter;
+    FreeTypeFontGenerator generator;
+
+    ShapeRenderer shape;
+
+    ArrayList<TurretType> turrets;
+
     Main game;
 
     public GameScreen(Main game) {
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("Plumpfull.ttf"));
+        parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
+        parameter.size = 28;
+        parameter.color = Color.BLACK;
+
+        showShop = true;
         this.game = game;
         isDone = false;
         lastTimeCountedFPS = TimeUtils.millis();
@@ -67,8 +93,12 @@ public class GameScreen implements Screen {
         sinceChangeFPS = 0;
         sinceChangeTime = 0;
         frameRate = Gdx.graphics.getFramesPerSecond();
-        font = new BitmapFont();
-        font.getData().setScale(1.2f);
+        font = generator.generateFont(parameter);
+
+        isTurretChosen = false;
+        path = new ArrayList<>();
+        path.add(new PathArea(41*16f,11*16f,6*16f,54*16));
+        path.add(new PathArea(47*16f,11*16f,71*16f,6*16f));
 
         charY = Main.HEIGHT / 2 - CHAR_HEIGHT / 2;
         charX = Main.WIDTH / 2 - CHAR_WIDTH / 2;
@@ -83,7 +113,7 @@ public class GameScreen implements Screen {
         roll = 2;
         rollTimer = 0;
         rolls = new Animation[5];
-
+        shape = new ShapeRenderer();
 
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
@@ -95,6 +125,8 @@ public class GameScreen implements Screen {
 
         enemies = new ArrayList<>();
         createNewEnemies(50);
+
+        turrets = new ArrayList<>();
 
 
         cam.setToOrtho(false, w, h);
@@ -114,6 +146,8 @@ public class GameScreen implements Screen {
         lastTimeCountedRound = TimeUtils.millis();
 
 
+
+
         sinceChangeTime += time;
 
         stateTime += delta;
@@ -129,15 +163,23 @@ public class GameScreen implements Screen {
 
         game.batch.begin();
 
+        if(Gdx.input.isKeyJustPressed(Input.Keys.B)){
+            showShop = !showShop;
+        }
+
         if (enemies.isEmpty()) {
             isDone = true;
         }
 
         for (Iterator<PositionsMap01> iter = enemies.iterator(); iter.hasNext(); ) {
             PositionsMap01 it = iter.next();
-            if (it.isPositionEnd()) {
+            if (it.isPositionEnd() || it.getEnemyType().isDead()) {
+
                 iter.remove();
             }
+        }
+        for (TurretType turretType: turrets) {
+            showTurrets(turretType);
         }
 
 
@@ -152,11 +194,18 @@ public class GameScreen implements Screen {
                 createNewEnemies(50);
             }
         }
+        if(isTurretChosen){
+            hoverTurret();
+        }
 
         showFPS();
-        font.draw(game.batch, (int) frameRate + " fps", 3, Gdx.graphics.getHeight() - 3);
-        font.draw(game.batch, BaseHealth + " hp", 100, Gdx.graphics.getHeight() - 3);
+        font.draw(game.batch, (int) frameRate + " fps", 3, Gdx.graphics.getHeight() - 10);
+        font.draw(game.batch, BaseHealth + " hp", 160, Gdx.graphics.getHeight() - 10);
         game.batch.end();
+
+        if(showShop){
+            showShop();
+        }
     }
 
     @Override
@@ -183,6 +232,7 @@ public class GameScreen implements Screen {
         map.dispose();
         renderer.dispose();
         gameMap.dispose();
+        generator.dispose();
     }
 
     public void showFPS() {
@@ -202,6 +252,31 @@ public class GameScreen implements Screen {
         }
     }
 
+    public void hoverTurret(){
+        game.batch.draw(new TextureRegion(new Texture("turret01.png")), Gdx.input.getX()-25, Gdx.graphics.getHeight()-Gdx.input.getY()-25,50,50);
+        if(Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)){
+            isTurretChosen = false;
+        }
+        if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            boolean isAllowed = true;
+            for (TurretType turret : turrets) {
+                if (turret instanceof Turret01) {
+                    Turret01 turret01 = (Turret01) turret;
+                    if (turret01.isInside(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25, 50, 50))
+                        isAllowed = false;
+                }
+            }
+            for (PathArea pathArea : path) {
+                if (pathArea.isInside(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25, 50, 50))
+                    isAllowed = false;
+            }
+            if (isAllowed){
+                turrets.add(new Turret01(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25));
+            isTurretChosen = false;
+            }
+        }
+    }
+
     public void showEnemy(PositionsMap01 enemy) {
         if (enemy.getEnemyType() instanceof Bug01) {
 
@@ -212,7 +287,6 @@ public class GameScreen implements Screen {
                 if (enemy.isPosition1()) {
                     bug01.changePos(0, bug01.getSpeed() * Gdx.graphics.getDeltaTime());
                     if (bug01.getPos().y >= positions[2].y) {
-                        System.out.println("test");
                         bug01.setPos(new Vector2(positions[2].x, positions[2].y));
                         enemy.setPositionEnd(true);
                         this.BaseHealth -= bug01.getDamage();
@@ -231,6 +305,42 @@ public class GameScreen implements Screen {
                 bug01.render(game.batch);
             }
 
+        }
+    }
+
+    public void showShop(){
+        shape.begin(ShapeRenderer.ShapeType.Filled);
+        shape.setColor(Color.BLUE);
+        shape.rect(400,0,Gdx.graphics.getWidth()-800,100);
+        shape.end();
+
+        game.batch.begin();
+        game.batch.draw(new TextureRegion(new Texture("turret01.png")), 450, (100-64)/2,64,64);
+
+        if(450 < Gdx.input.getX()&& 450+64 > Gdx.input.getX()&& (100-64)/2 < Gdx.graphics.getHeight()- Gdx.input.getY()&& 25+64 > Gdx.graphics.getHeight()- Gdx.input.getY()){
+            if(Gdx.input.justTouched()){
+                isTurretChosen = true;
+            }
+        }
+
+        game.batch.end();
+    }
+
+    public void showTurrets(TurretType turretType){
+        if(turretType instanceof Turret01){
+            Turret01 turret01 = (Turret01) turretType;
+            if(!turret01.hasEnemy()){
+                for (PositionsMap01 enemy : enemies) {
+                    if(enemy.getEnemyType() instanceof Bug01){
+                        Bug01 bug01 = (Bug01) enemy.getEnemyType();
+                        if(turret01.getPos().dst(bug01.getPos())<turret01.getRange()){
+                            turret01.setEnemy(bug01);
+                        }
+
+                    }
+                }
+            }
+            turret01.render(game.batch);
         }
     }
 

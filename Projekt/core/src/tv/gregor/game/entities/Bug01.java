@@ -48,8 +48,7 @@ public class Bug01 implements EnemyType {
 
     @Override
     public boolean isDead() {
-        if (this.health == 0) return true;
-        else return false;
+        return this.health <= 0;
     }
 
     @Override
