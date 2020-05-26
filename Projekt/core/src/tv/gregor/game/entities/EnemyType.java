@@ -1,7 +1,6 @@
 package tv.gregor.game.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 
 public interface EnemyType {
 
@@ -18,10 +17,4 @@ public interface EnemyType {
     public void setSpeed(float speed);
 
     public boolean isDead();
-
-    public void setPos(Vector2 pos);
-
-    public void changePos(float x, float y);
-
-    public Vector2 getPos();
 }

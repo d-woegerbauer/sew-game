@@ -7,7 +7,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -17,9 +19,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 import tv.gregor.game.GameMaps.GameMap;
 import tv.gregor.game.Main;
+import tv.gregor.game.PositionsMap01;
 import tv.gregor.game.entities.Bug01;
 import tv.gregor.game.pathhelper.PathArea;
-import tv.gregor.game.pathhelper.PositionsMap01;
 import tv.gregor.game.turrets.Turret01;
 import tv.gregor.game.turrets.TurretType;
 
@@ -35,6 +37,7 @@ public class GameScreen implements Screen {
     public static final int CHAR_WIDTH = CHAR_WIDTH_PIXEL * 3;
     public static final int CHAR_HEIGHT = CHAR_HEIGHT_PIXEL * 3;
 
+    Animation<TextureRegion>[] rolls;
 
     Vector2[] positions;
 
@@ -47,53 +50,55 @@ public class GameScreen implements Screen {
     long lastTimeCountedFPS;
     long lastTimeCountedRound;
 
+    boolean showShop;
+
     private float sinceChangeFPS;
     private float sinceChangeTime;
     private float frameRate;
     private boolean isDone;
-    private final BitmapFont font;
-    private final FreeTypeFontGenerator generator;
-    private final FreeTypeFontGenerator.FreeTypeFontParameter parameter;
-    Texture turretTexture;
-    private int turretType;
-    private final ArrayList<PathArea> path;
-
-    private boolean turretChosen;
-
-    private final ShapeRenderer shape;
-    private boolean showBuyMenu;
+    private BitmapFont font;
 
     float charX, charY;
+    int roll;
     float stateTime;
+    float rollTimer;
 
+    boolean isTurretChosen;
+    ArrayList<PathArea> path;
     OrthogonalTiledMapRenderer renderer;
     TiledMap map;
     ArrayList<PositionsMap01> enemies;
+
+    FreeTypeFontGenerator.FreeTypeFontParameter parameter;
+    FreeTypeFontGenerator generator;
+
+    ShapeRenderer shape;
+
     ArrayList<TurretType> turrets;
 
     Main game;
 
     public GameScreen(Main game) {
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("Plumpfull.ttf"));
+        parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
+        parameter.size = 28;
+        parameter.color = Color.BLACK;
+
+        showShop = true;
         this.game = game;
-
-
-        turretChosen = false;
-        showBuyMenu = true;
-        shape = new ShapeRenderer();
-
         isDone = false;
         lastTimeCountedFPS = TimeUtils.millis();
         lastTimeCountedRound = TimeUtils.millis();
         sinceChangeFPS = 0;
         sinceChangeTime = 0;
         frameRate = Gdx.graphics.getFramesPerSecond();
-
-        generator = new FreeTypeFontGenerator(Gdx.files.internal("Plumpfull.ttf"));
-        parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.color = Color.BLACK;
-        parameter.size = 30;
-
         font = generator.generateFont(parameter);
+
+        isTurretChosen = false;
+        path = new ArrayList<>();
+        path.add(new PathArea(41*16f,11*16f,6*16f,54*16));
+        path.add(new PathArea(47*16f,11*16f,71*16f,6*16f));
 
         charY = Main.HEIGHT / 2 - CHAR_HEIGHT / 2;
         charX = Main.WIDTH / 2 - CHAR_WIDTH / 2;
@@ -104,6 +109,11 @@ public class GameScreen implements Screen {
                 new Vector2(44 * 16f, Gdx.graphics.getHeight())
         };
 
+
+        roll = 2;
+        rollTimer = 0;
+        rolls = new Animation[5];
+        shape = new ShapeRenderer();
 
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
@@ -117,9 +127,7 @@ public class GameScreen implements Screen {
         createNewEnemies(50);
 
         turrets = new ArrayList<>();
-        path = new ArrayList<>();
-        path.add(new PathArea(41*16f,11*16f,5*16f,54*16f));
-        path.add(new PathArea(48*16f,11*16f,71*16f,5*16f));
+
 
         cam.setToOrtho(false, w, h);
         cam.update();
@@ -138,14 +146,11 @@ public class GameScreen implements Screen {
         lastTimeCountedRound = TimeUtils.millis();
 
 
+
+
         sinceChangeTime += time;
 
         stateTime += delta;
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-            showBuyMenu = !showBuyMenu;
-        }
-
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -158,21 +163,23 @@ public class GameScreen implements Screen {
 
         game.batch.begin();
 
-        if(turretChosen){
-            hoverTurret();
+        if(Gdx.input.isKeyJustPressed(Input.Keys.B)){
+            showShop = !showShop;
         }
 
         if (enemies.isEmpty()) {
             isDone = true;
         }
 
-
-
         for (Iterator<PositionsMap01> iter = enemies.iterator(); iter.hasNext(); ) {
             PositionsMap01 it = iter.next();
-            if (it.isPositionEnd() || it.isDead()) {
+            if (it.isPositionEnd() || it.getEnemyType().isDead()) {
+
                 iter.remove();
             }
+        }
+        for (TurretType turretType: turrets) {
+            showTurrets(turretType);
         }
 
 
@@ -187,21 +194,18 @@ public class GameScreen implements Screen {
                 createNewEnemies(50);
             }
         }
-
-        for (TurretType turret : turrets) {
-            showTurret(turret);
+        if(isTurretChosen){
+            hoverTurret();
         }
 
         showFPS();
         font.draw(game.batch, (int) frameRate + " fps", 3, Gdx.graphics.getHeight() - 10);
-        font.draw(game.batch, BaseHealth + " hp", 130, Gdx.graphics.getHeight() - 10);
-
-
+        font.draw(game.batch, BaseHealth + " hp", 160, Gdx.graphics.getHeight() - 10);
         game.batch.end();
-        if (showBuyMenu) {
+
+        if(showShop){
             showShop();
         }
-
     }
 
     @Override
@@ -228,6 +232,7 @@ public class GameScreen implements Screen {
         map.dispose();
         renderer.dispose();
         gameMap.dispose();
+        generator.dispose();
     }
 
     public void showFPS() {
@@ -244,6 +249,31 @@ public class GameScreen implements Screen {
     public void createNewEnemies(int count) {
         for (int i = 0; i < count; i++) {
             enemies.add(new PositionsMap01(new Bug01(positions[0].x + i * 40, positions[0].y, 1)));
+        }
+    }
+
+    public void hoverTurret(){
+        game.batch.draw(new TextureRegion(new Texture("turret01.png")), Gdx.input.getX()-25, Gdx.graphics.getHeight()-Gdx.input.getY()-25,50,50);
+        if(Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)){
+            isTurretChosen = false;
+        }
+        if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            boolean isAllowed = true;
+            for (TurretType turret : turrets) {
+                if (turret instanceof Turret01) {
+                    Turret01 turret01 = (Turret01) turret;
+                    if (turret01.isInside(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25, 50, 50))
+                        isAllowed = false;
+                }
+            }
+            for (PathArea pathArea : path) {
+                if (pathArea.isInside(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25, 50, 50))
+                    isAllowed = false;
+            }
+            if (isAllowed){
+                turrets.add(new Turret01(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25));
+            isTurretChosen = false;
+            }
         }
     }
 
@@ -271,76 +301,42 @@ public class GameScreen implements Screen {
                         enemy.setPosition1(true);
                     }
                 }
+
                 bug01.render(game.batch);
             }
 
         }
     }
 
-    public void showShop() {
-        this.shape.begin(ShapeRenderer.ShapeType.Filled);
-        this.shape.setProjectionMatrix(cam.combined);
-        this.shape.setColor(Color.BROWN);
-        this.shape.rect(Gdx.graphics.getWidth()/4, 0, Gdx.graphics.getWidth()/2, 100);
-        this.shape.setColor(Color.BLACK);
-        this.shape.rect(Gdx.graphics.getWidth()/4+50, 25, 50, 50);
-        if (Gdx.input.getX() < Gdx.graphics.getWidth()/4+50 + 50 && Gdx.input.getX() > Gdx.graphics.getWidth()/4+50 && Main.HEIGHT - Gdx.input.getY() < 25 + 50 && Main.HEIGHT - Gdx.input.getY() > 25) {
-            if (Gdx.input.justTouched()) {
-                turretChosen = true;
-                turretType = 1;
-                turretTexture = new Texture("turret01.png");
-            }
+    public void showShop(){
+        shape.begin(ShapeRenderer.ShapeType.Filled);
+        shape.setColor(Color.BLUE);
+        shape.rect(400,0,Gdx.graphics.getWidth()-800,100);
+        shape.end();
 
-        }
+        game.batch.begin();
+        game.batch.draw(new TextureRegion(new Texture("turret01.png")), 450, (100-64)/2,64,64);
 
-        this.shape.end();
-    }
-
-    public void hoverTurret(){
-        float x = Gdx.input.getX()-25;
-        float y = Gdx.graphics.getHeight()-Gdx.input.getY()-25;
-        game.batch.draw(turretTexture,x,y,50,50);
-        if(Gdx.input.justTouched()){
-            boolean isNotValid = false;
-            for (PathArea temp: path) {
-
-                if(temp.isInside(x,y,50,50)){
-                    isNotValid = true;
-                    break;
-                }
-            }
-
-            for (TurretType temp: turrets) {
-                if(temp instanceof Turret01) {
-                    Turret01 temp2 = (Turret01) temp;
-                    if (temp2.isInside(x, y, 50, 50)) {
-                        isNotValid = true;
-                        break;
-                    }
-                }
-            }
-
-            if(!isNotValid) {
-                turretChosen = false;
-                if (turretType == 1) {
-                    turrets.add(new Turret01(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25, 0));
-
-                }
+        if(450 < Gdx.input.getX()&& 450+64 > Gdx.input.getX()&& (100-64)/2 < Gdx.graphics.getHeight()- Gdx.input.getY()&& 25+64 > Gdx.graphics.getHeight()- Gdx.input.getY()){
+            if(Gdx.input.justTouched()){
+                isTurretChosen = true;
             }
         }
+
+        game.batch.end();
     }
 
-    public void showTurret(TurretType turretType){
+    public void showTurrets(TurretType turretType){
         if(turretType instanceof Turret01){
             Turret01 turret01 = (Turret01) turretType;
             if(!turret01.hasEnemy()){
                 for (PositionsMap01 enemy : enemies) {
                     if(enemy.getEnemyType() instanceof Bug01){
                         Bug01 bug01 = (Bug01) enemy.getEnemyType();
-                        Vector2 posBug01 = bug01.getPos();
-                        if(posBug01.dst(turret01.getPos())<= turret01.getRange()){
+                        if(turret01.getPos().dst(bug01.getPos())<turret01.getRange()){
                             turret01.setEnemy(bug01);
                         }
+
                     }
                 }
             }

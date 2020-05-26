@@ -20,11 +20,9 @@ public class MainMenuScreen implements Screen {
     Texture exitButtonActive;
     Texture exitButtonInactive;
 
-
     public MainMenuScreen(Main game) {
         this.game = game;
         SPAWN_TIME = 1.2f;
-
         playButtonActive = new Texture("play_button_active.png");
         playButtonInactive = new Texture("play_button_inactive.png");
         exitButtonActive = new Texture("exit_button_active.png");
@@ -33,7 +31,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void show() {
-        
+
     }
 
     @Override

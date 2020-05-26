@@ -23,7 +23,7 @@ public class Turret01 implements TurretType{
     float range = 200;
     float timePassed;
 
-    public Turret01(float x , float y, float rotation) {
+    public Turret01(float x , float y) {
         hasEnemy = false;
         this.image = new Texture("turret01.png");
         this.rotation = 90;
@@ -53,7 +53,6 @@ public class Turret01 implements TurretType{
                         rotateClockwise = true;
                         rotation = - rotation;
                     }
-                    System.out.println(rotation);
 
                 if(timePassed >= 200) {
                     enemy.setHealth(this.damage);
