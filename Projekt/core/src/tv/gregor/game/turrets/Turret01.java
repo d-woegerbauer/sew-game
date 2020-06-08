@@ -22,6 +22,8 @@ public class Turret01 implements TurretType{
     Bug01 enemy;
     float range = 200;
     float timePassed;
+    Bullet bullet;
+    private boolean bulletIsMoving;
 
     public Turret01(float x , float y) {
         hasEnemy = false;
@@ -31,6 +33,7 @@ public class Turret01 implements TurretType{
         timePassed = 0;
         direction = new Vector2(pos.x,pos.y+1);
         rotateClockwise = false;
+        bulletIsMoving = false;
     }
 
     @Override
@@ -54,9 +57,22 @@ public class Turret01 implements TurretType{
                         rotation = - rotation;
                     }
 
-                if(timePassed >= 200) {
-                    enemy.setHealth(this.damage);
+                if(timePassed >= 200 && !bulletIsMoving) {
+                    bulletIsMoving = true;
+                    bullet = new Bullet(pos.cpy(),enemy.getPos().cpy());
+
                     timePassed = 0;
+                }
+                if(bulletIsMoving){
+
+                    bullet.render(batch);
+                    if(bullet.isOnEndPosition()){
+
+                        enemy.setHealth(this.damage);
+                        bullet = null;
+
+                        bulletIsMoving = false;
+                    }
                 }
             }
         }
