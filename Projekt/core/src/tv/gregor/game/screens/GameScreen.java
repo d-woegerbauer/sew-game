@@ -21,7 +21,6 @@ import tv.gregor.game.GameMaps.GameMap;
 import tv.gregor.game.Main;
 import tv.gregor.game.PositionsMap01;
 import tv.gregor.game.entities.Bug01;
-import tv.gregor.game.pathhelper.PathArea;
 import tv.gregor.game.turrets.Turret01;
 import tv.gregor.game.turrets.TurretType;
 
@@ -64,7 +63,7 @@ public class GameScreen implements Screen {
     float rollTimer;
 
     boolean isTurretChosen;
-    ArrayList<PathArea> path;
+
     OrthogonalTiledMapRenderer renderer;
     TiledMap map;
     ArrayList<PositionsMap01> enemies;
@@ -96,9 +95,7 @@ public class GameScreen implements Screen {
         font = generator.generateFont(parameter);
 
         isTurretChosen = false;
-        path = new ArrayList<>();
-        path.add(new PathArea(41*16f,11*16f,6*16f,54*16));
-        path.add(new PathArea(47*16f,11*16f,71*16f,6*16f));
+
 
         charY = Main.HEIGHT / 2 - CHAR_HEIGHT / 2;
         charX = Main.WIDTH / 2 - CHAR_WIDTH / 2;
@@ -206,6 +203,8 @@ public class GameScreen implements Screen {
         if(showShop){
             showShop();
         }
+
+
     }
 
     @Override
@@ -257,6 +256,7 @@ public class GameScreen implements Screen {
         if(Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)){
             isTurretChosen = false;
         }
+<<<<<<< Updated upstream
         if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             boolean isAllowed = true;
             for (TurretType turret : turrets) {
@@ -274,6 +274,11 @@ public class GameScreen implements Screen {
                 turrets.add(new Turret01(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25));
             isTurretChosen = false;
             }
+=======
+        if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
+            turrets.add(new Turret01(Gdx.input.getX()-25,Gdx.graphics.getHeight()-Gdx.input.getY()-25));
+            isTurretChosen = false;
+>>>>>>> Stashed changes
         }
     }
 

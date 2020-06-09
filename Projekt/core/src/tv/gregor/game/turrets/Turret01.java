@@ -63,7 +63,6 @@ public class Turret01 implements TurretType{
         batch.draw(new TextureRegion(image), pos.x, pos.y,this.width/2,this.height/2, this.width, this.height,1,1,-rotation,rotateClockwise);
     }
 
-
     public Vector2 getPos() {
         return pos;
     }
