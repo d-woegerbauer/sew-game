@@ -29,12 +29,9 @@ Here are the different types of allies listed
 |integer|-|120||long range arrow|80  |-  |500|-  |
 |short|-|225|short range|pumpgun  |300  |very short  |500  |-  |
 |float|-|300|poison damage|highspeed   |50|-  |750  |-  |
-ideas: string, arrays, 5d array
 ## Implementation
 |  |  |
 |--|--|
 |Language|Java  |
 |Framework|[libGDX](https://libgdx.badlogicgames.com/) |
 |IDEA|IntelliJ |
-## TODO
-upgrades for all allies types + description, remove refund, all hostile types, special abilities 
