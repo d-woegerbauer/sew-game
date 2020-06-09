@@ -51,7 +51,7 @@ public class Turret01 implements TurretType{
                     }
                     if(direction.x > enemy.getPos().x){
                         rotateClockwise = true;
-                        rotation = - rotation;
+                        rotation = -rotation;
                     }
 
                 if(timePassed >= 200) {
