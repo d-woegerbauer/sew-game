@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import tv.gregor.game.entities.Bug01;
+import tv.gregor.game.entities.Bug02;
+import tv.gregor.game.entities.Bug10;
 import tv.gregor.game.entities.EnemyType;
 
-public class Turret01 implements TurretType{
+public class Turret01 implements TurretType {
 
     Vector2 pos;
     float damage = 10;
@@ -23,44 +25,45 @@ public class Turret01 implements TurretType{
     float range = 200;
     float timePassed;
 
-    public Turret01(float x , float y) {
+    public Turret01(float x, float y) {
         hasEnemy = false;
-        this.image = new Texture("turret01.png");
+        this.image = new Texture("turret02.png");
         this.rotation = 90;
         pos = new Vector2(x, y);
         timePassed = 0;
-        direction = new Vector2(pos.x,pos.y+1);
+        direction = new Vector2(pos.x, pos.y + 1);
         rotateClockwise = false;
     }
 
     @Override
     public void render(SpriteBatch batch) {
-        timePassed += Gdx.graphics.getDeltaTime()*1000;
-        if(timePassed >= 1000) {
+        timePassed += Gdx.graphics.getDeltaTime() * 1000;
+        if (timePassed >= 1000) {
             rotation = 90;
             rotateClockwise = false;
         }
-        if(hasEnemy){
-            if(enemy.isDead()){
+        if (hasEnemy) {
+            if (enemy.isDead()) {
                 hasEnemy = false;
 
-            }else {
-                rotation = (float) Math.toDegrees(Math.atan2(direction.x - enemy.getPos().y, direction.y - enemy.getPos().x));
-                    if(direction.y > enemy.getPos().y){
-                        rotation = -rotation;
-                    }
-                    if(direction.x > enemy.getPos().x){
-                        rotateClockwise = true;
-                        rotation = - rotation;
-                    }
 
-                if(timePassed >= 200) {
+            } else {
+                rotation = (float) Math.toDegrees(Math.atan2(direction.x - enemy.getPos().y, direction.y - enemy.getPos().x));
+                if (direction.y > enemy.getPos().y) {
+                    rotation = -rotation;
+                }
+                if (direction.x > enemy.getPos().x) {
+                    rotateClockwise = true;
+                    rotation = -rotation;
+                }
+
+                if (timePassed >= 200) {
                     enemy.setHealth(this.damage);
                     timePassed = 0;
                 }
             }
         }
-        batch.draw(new TextureRegion(image), pos.x, pos.y,this.width/2,this.height/2, this.width, this.height,1,1,-rotation,rotateClockwise);
+        batch.draw(new TextureRegion(image), pos.x, pos.y, this.width / 2, this.height / 2, this.width, this.height, 1, 1, -rotation, rotateClockwise);
     }
 
     public Vector2 getPos() {
@@ -91,7 +94,7 @@ public class Turret01 implements TurretType{
 
     public void setEnemy(EnemyType enemy) {
         this.hasEnemy = true;
-        if(enemy instanceof Bug01){
+        if (enemy instanceof Bug01) {
             this.enemy = (Bug01) enemy;
         }
 

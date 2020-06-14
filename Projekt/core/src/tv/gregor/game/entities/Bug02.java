@@ -17,15 +17,26 @@ public class Bug02 implements EnemyType{
 
 
     public Bug02(float x, float y, float healthFactor) {
-        this.image = new Texture("bug01.png");
+        this.image = new Texture("bug02.png");
         this.health *= healthFactor;
 
         pos = new Vector2(x, y);
     }
 
+    public Vector2 getPos() {
+        return pos;
+    }
+
+    public void changePos(float x, float y) {
+        this.pos.add(x,y);
+    }
+
+    public void setPos(Vector2 pos) {
+        this.pos = pos;
+    }
     @Override
     public void render(SpriteBatch batch) {
-
+        batch.draw(image, pos.x, pos.y, this.width, this.height);
     }
 
     @Override

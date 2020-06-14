@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-public class Bug05 implements EnemyType{
+public class Bug05 implements EnemyType {
 
     Vector2 pos;
     float health = 65;
@@ -22,10 +22,20 @@ public class Bug05 implements EnemyType{
 
         pos = new Vector2(x, y);
     }
+    public Vector2 getPos() {
+        return pos;
+    }
 
+    public void changePos(float x, float y) {
+        this.pos.add(x,y);
+    }
+
+    public void setPos(Vector2 pos) {
+        this.pos = pos;
+    }
     @Override
     public void render(SpriteBatch batch) {
-
+        batch.draw(image, pos.x, pos.y, this.width, this.height);
     }
 
     @Override
