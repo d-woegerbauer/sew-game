@@ -21,7 +21,7 @@ public class Turret01 implements TurretType {
     Vector2 direction;
     public boolean rotateClockwise;
     boolean hasEnemy;
-    Bug01 enemy;
+    EnemyType enemy;
     float range = 200;
     float timePassed;
 
@@ -94,10 +94,7 @@ public class Turret01 implements TurretType {
 
     public void setEnemy(EnemyType enemy) {
         this.hasEnemy = true;
-        if (enemy instanceof Bug01) {
-            this.enemy = (Bug01) enemy;
-        }
-
+        this.enemy = enemy;
     }
 
     public float getRange() {

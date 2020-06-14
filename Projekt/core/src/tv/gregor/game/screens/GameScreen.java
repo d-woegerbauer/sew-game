@@ -245,7 +245,8 @@ public class GameScreen implements Screen {
 
     public void createNewEnemies(int count) {
         for (int i = 0; i < count; i++) {
-            enemies.add(new PositionsMap01(new Bug01(positions[0].x + i * 40, positions[0].y, 1)));
+            enemies.add(new PositionsMap01(new Bug02(positions[0].x + i * 40, positions[0].y, 1)));
+            enemies.add(new PositionsMap01(new Bug01(positions[0].x + i * 60, positions[0].y, 1)));
         }
     }
 
@@ -261,34 +262,35 @@ public class GameScreen implements Screen {
     }
 
     public void showEnemy(PositionsMap01 enemy) {
-        if (enemy.getEnemyType() instanceof Bug01) {
+        //if (enemy.getEnemyType() instanceof Bug01) {
 
-            Bug01 bug01 = (Bug01) enemy.getEnemyType();
+          //  Bug01 bug01 = (Bug01) enemy.getEnemyType();
 
             if (!enemy.isPositionEnd()) {
 
                 if (enemy.isPosition1()) {
-                    bug01.changePos(0, bug01.getSpeed() * Gdx.graphics.getDeltaTime());
-                    if (bug01.getPos().y >= positions[2].y) {
-                        bug01.setPos(new Vector2(positions[2].x, positions[2].y));
+                    enemy.getEnemyType().changePos(0, enemy.getEnemyType().getSpeed() * Gdx.graphics.getDeltaTime());
+                    if (enemy.getEnemyType().getPos().y >= positions[2].y) {
+                        enemy.getEnemyType().setPos(new Vector2(positions[2].x, positions[2].y));
                         enemy.setPositionEnd(true);
-                        this.BaseHealth -= bug01.getDamage();
+                        this.BaseHealth -= enemy.getEnemyType().getDamage();
                         if (this.BaseHealth < 0)
                             this.BaseHealth = 0;
                     }
 
                 } else {
-                    bug01.changePos(-bug01.getSpeed() * Gdx.graphics.getDeltaTime(), 0);
-                    if (bug01.getPos().x <= positions[1].x) {
-                        bug01.setPos(new Vector2(positions[1].x, positions[1].y));
+                    enemy.getEnemyType().changePos(-enemy.getEnemyType().getSpeed() * Gdx.graphics.getDeltaTime(), 0);
+                    if (enemy.getEnemyType().getPos().x <= positions[1].x) {
+                        enemy.getEnemyType().setPos(new Vector2(positions[1].x, positions[1].y));
                         enemy.setPosition1(true);
                     }
                 }
 
-                bug01.render(game.batch);
+                enemy.getEnemyType().render(game.batch);
             }
 
-        }else if(enemy.getEnemyType() instanceof Bug02) {
+        //}
+        /*else if(enemy.getEnemyType() instanceof Bug02) {
             Bug02 bug02 = (Bug02) enemy.getEnemyType();
 
             if (!enemy.isPositionEnd()) {
@@ -513,7 +515,7 @@ public class GameScreen implements Screen {
 
                 bug10.render(game.batch);
             }
-        }
+        }*/
     }
 
     public void showShop() {

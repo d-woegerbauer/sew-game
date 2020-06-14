@@ -22,18 +22,36 @@ public class Bug02 implements EnemyType{
 
         pos = new Vector2(x, y);
     }
-
+    @Override
     public Vector2 getPos() {
         return pos;
     }
 
+    @Override
     public void changePos(float x, float y) {
         this.pos.add(x,y);
     }
 
+    @Override
     public void setPos(Vector2 pos) {
         this.pos = pos;
     }
+
+    @Override
+    public void setHealth(float damage) {
+        this.health -= damage;
+    }
+
+    @Override
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
+
+    @Override
+    public boolean isDead() {
+        return this.health <= 0;
+    }
+
     @Override
     public void render(SpriteBatch batch) {
         batch.draw(image, pos.x, pos.y, this.width, this.height);
@@ -41,31 +59,17 @@ public class Bug02 implements EnemyType{
 
     @Override
     public float getHealth() {
-        return 0;
+        return health;
     }
 
     @Override
     public float getDamage() {
-        return 0;
+        return damage;
     }
 
     @Override
     public float getSpeed() {
-        return 0;
+        return speed;
     }
 
-    @Override
-    public void setHealth(float health) {
-
-    }
-
-    @Override
-    public void setSpeed(float speed) {
-
-    }
-
-    @Override
-    public boolean isDead() {
-        return false;
-    }
 }
