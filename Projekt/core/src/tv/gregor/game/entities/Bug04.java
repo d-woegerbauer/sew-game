@@ -17,7 +17,7 @@ public class Bug04 implements EnemyType{
 
 
     public Bug04(float x, float y, float healthFactor) {
-        this.image = new Texture("bug01.png");
+        this.image = new Texture("bug04.png");
         this.health *= healthFactor;
 
         pos = new Vector2(x, y);

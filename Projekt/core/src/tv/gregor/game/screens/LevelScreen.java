@@ -54,7 +54,7 @@ public class LevelScreen implements Screen{
 
         //Maps - images
         map1 = new Texture("map_images/map1.jpg");
-        map2 = new Texture("map_images/map1.jpg");
+        map2 = new Texture("map_images/map2.jpg");
         map3 = new Texture("map_images/map1.jpg");
     }
 
@@ -92,7 +92,7 @@ public class LevelScreen implements Screen{
         game.batch.draw(map1, 200, 500, MAP_WIDTH, MAP_HEIGHT);
         if (Gdx.input.getX() < 200 + MAP_WIDTH && Gdx.input.getX() > 200 && Main.HEIGHT - Gdx.input.getY() < Gdx.graphics.getHeight()-500 + MAP_HEIGHT && Main.HEIGHT - Gdx.input.getY() > MAP_HEIGHT) {
             if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-                game.setScreen(new GameScreen2(game));
+                game.setScreen(new GameScreen(game));
             }
         }
 
@@ -108,7 +108,7 @@ public class LevelScreen implements Screen{
         game.batch.draw(map3, 1400, 500, MAP_WIDTH, MAP_HEIGHT);
         if (Gdx.input.getX() < 1400 + MAP_WIDTH && Gdx.input.getX() > MAP_WIDTH && Main.HEIGHT - Gdx.input.getY() < Gdx.graphics.getHeight()-500 + MAP_HEIGHT && Main.HEIGHT - Gdx.input.getY() > MAP_HEIGHT) {
             if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-                game.setScreen(new GameScreen2(game));
+                game.setScreen(new GameScreen(game));
             }
         }
 
