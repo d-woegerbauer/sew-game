@@ -19,7 +19,7 @@ public class Turret01 implements TurretType{
     Vector2 direction;
     public boolean rotateClockwise;
     boolean hasEnemy;
-    Bug01 enemy;
+    EnemyType enemy;
     float range = 200;
     float timePassed;
     Bullet bullet;
@@ -31,7 +31,7 @@ public class Turret01 implements TurretType{
         this.rotation = 90;
         pos = new Vector2(x, y);
         timePassed = 0;
-        direction = new Vector2(pos.x,pos.y+1);
+        direction = new Vector2(pos.x,pos.y+10);
         rotateClockwise = false;
         bulletIsMoving = false;
     }
@@ -39,23 +39,17 @@ public class Turret01 implements TurretType{
     @Override
     public void render(SpriteBatch batch) {
         timePassed += Gdx.graphics.getDeltaTime()*1000;
-        if(timePassed >= 1000) {
-            rotation = 90;
-            rotateClockwise = false;
-        }
+        //if(timePassed >= 1000) {
+            //rotation = 90;
+            //rotateClockwise = false;
+        //}
         if(hasEnemy){
             if(enemy.isDead()){
                 hasEnemy = false;
 
             }else {
-                rotation = (float) Math.toDegrees(Math.atan2(direction.x - enemy.getPos().y, direction.y - enemy.getPos().x));
-                    if(direction.y > enemy.getPos().y){
-                        rotation = -rotation;
-                    }
-                    if(direction.x > enemy.getPos().x){
-                        rotateClockwise = true;
-                        rotation = -rotation;
-                    }
+                rotateClockwise = true;
+                rotation = (float) Math.toDegrees(Math.atan2(enemy.getPos().y-direction.y , enemy.getPos().x-direction.x));
 
                 if(timePassed >= 200 && !bulletIsMoving) {
                     bulletIsMoving = true;
@@ -76,7 +70,7 @@ public class Turret01 implements TurretType{
                 }
             }
         }
-        batch.draw(new TextureRegion(image), pos.x, pos.y,this.width/2,this.height/2, this.width, this.height,1,1,-rotation,rotateClockwise);
+        batch.draw(new TextureRegion(image), pos.x, pos.y,this.width/2,this.height/2, this.width, this.height,1,1,rotation,rotateClockwise);
     }
 
 
@@ -108,9 +102,7 @@ public class Turret01 implements TurretType{
 
     public void setEnemy(EnemyType enemy) {
         this.hasEnemy = true;
-        if(enemy instanceof Bug01){
-            this.enemy = (Bug01) enemy;
-        }
+        this.enemy = enemy;
 
     }
 

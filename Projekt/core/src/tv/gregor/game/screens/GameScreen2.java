@@ -26,7 +26,7 @@ import tv.gregor.game.turrets.TurretType;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class GameScreen implements Screen {
+public class GameScreen2 implements Screen {
 
     private Vector2[] positions;
 
@@ -72,7 +72,7 @@ public class GameScreen implements Screen {
      * @param game
      */
 
-    GameScreen(Main game) {
+    GameScreen2(Main game) {
 
         round = 0;
         generator = new FreeTypeFontGenerator(Gdx.files.internal("Plumpfull.ttf"));
@@ -93,15 +93,17 @@ public class GameScreen implements Screen {
         font = generator.generateFont(parameter);
 
         path = new ArrayList<>();
-        path.add(new PathArea(41*16f,11*16f,6*16f,54*16));
-        path.add(new PathArea(47*16f,11*16f,71*16f,6*16f));
+        path.add(new PathArea(0*16f,16*16f,43*16f,6*16f));
+        path.add(new PathArea(36*16f,16*16f,6*16f,33*16));
+        path.add(new PathArea(36*16f,44*16f,76*16f,6*16f));
 
         isTurretChosen = false;
 
         positions = new Vector2[]{
-                new Vector2(Gdx.graphics.getWidth(), 14 * 16f),
-                new Vector2(44 * 16f, 14 * 16f),
-                new Vector2(44 * 16f, Gdx.graphics.getHeight())
+                new Vector2(-10 * 16f, (float) (18.5 * 16f)),
+                new Vector2((float) (38.5 * 16f), (float) (18.5 * 16f)),
+                new Vector2((float) (38.5 * 16f), (float) (46.5 * 16f)),
+                new Vector2(Gdx.graphics.getWidth(), (float) (46.5 * 16f))
         };
 
         shape = new ShapeRenderer();
@@ -111,7 +113,7 @@ public class GameScreen implements Screen {
 
         path.add(new PathArea(8*16f,13*16f,16*6f,43*16f));
 
-        map = new TmxMapLoader().load("map01.tmx");
+        map = new TmxMapLoader().load("map02.tmx");
         cam = new OrthographicCamera(w, h);
         renderer = new OrthogonalTiledMapRenderer(map);
 
@@ -264,34 +266,34 @@ public class GameScreen implements Screen {
             System.out.println(random);
             switch (random){
                 case 1:
-                    enemies.add(new PositionsMap02(new Bug01(positions[0].x + i * 40, positions[0].y, 1)));
+                    enemies.add(new PositionsMap02(new Bug01(positions[0].x - i * 40, positions[0].y, 1)));
                     break;
                 case 2:
-                    enemies.add(new PositionsMap02(new Bug02(positions[0].x + i * 40, positions[0].y, 1)));
+                    enemies.add(new PositionsMap02(new Bug02(positions[0].x - i * 40, positions[0].y, 1)));
                     break;
                 case 3:
-                    enemies.add(new PositionsMap02(new Bug03(positions[0].x + i * 40, positions[0].y, 1)));
+                    enemies.add(new PositionsMap02(new Bug03(positions[0].x - i * 40, positions[0].y, 1)));
                     break;
                 case 4:
-                    enemies.add(new PositionsMap02(new Bug04(positions[0].x + i * 40, positions[0].y, 1)));
+                    enemies.add(new PositionsMap02(new Bug04(positions[0].x - i * 40, positions[0].y, 1)));
                     break;
                 case 5:
-                    enemies.add(new PositionsMap02(new Bug05(positions[0].x + i * 40, positions[0].y, 1)));
+                    enemies.add(new PositionsMap02(new Bug05(positions[0].x - i * 40, positions[0].y, 1)));
                     break;
                 case 6:
-                    enemies.add(new PositionsMap02(new Bug06(positions[0].x + i * 40, positions[0].y, 1)));
+                    enemies.add(new PositionsMap02(new Bug06(positions[0].x - i * 40, positions[0].y, 1)));
                     break;
                 case 7:
-                    enemies.add(new PositionsMap02(new Bug07(positions[0].x + i * 40, positions[0].y, 1)));
+                    enemies.add(new PositionsMap02(new Bug07(positions[0].x - i * 40, positions[0].y, 1)));
                     break;
                 case 8:
-                    enemies.add(new PositionsMap02(new Bug08(positions[0].x + i * 40, positions[0].y, 1)));
+                    enemies.add(new PositionsMap02(new Bug08(positions[0].x - i * 40, positions[0].y, 1)));
                     break;
                 case 9:
-                    enemies.add(new PositionsMap02(new Bug09(positions[0].x + i * 40, positions[0].y, 1)));
+                    enemies.add(new PositionsMap02(new Bug09(positions[0].x - i * 40, positions[0].y, 1)));
                     break;
                 case 10:
-                    enemies.add(new PositionsMap02(new Bug10(positions[0].x + i * 40, positions[0].y, 1)));
+                    enemies.add(new PositionsMap02(new Bug10(positions[0].x - i * 40, positions[0].y, 1)));
                     break;
             }
         }
@@ -326,10 +328,10 @@ public class GameScreen implements Screen {
     private void showEnemy(PositionsMap02 enemy) {
         if (!enemy.isPositionEnd()) {
 
-            if (enemy.isPosition1()) {
-                enemy.getEnemyType().changePos(0, enemy.getEnemyType().getSpeed() * Gdx.graphics.getDeltaTime());
-                if (enemy.getEnemyType().getPos().y >= positions[2].y) {
-                    enemy.getEnemyType().setPos(new Vector2(positions[2].x, positions[2].y));
+            if (enemy.isPosition2()) {
+                enemy.getEnemyType().changePos(enemy.getEnemyType().getSpeed() * Gdx.graphics.getDeltaTime(), 0);
+                if (positions[3].x <= enemy.getEnemyType().getPos().x) {
+                    enemy.getEnemyType().setPos(new Vector2(positions[3].x, positions[3].y));
                     enemy.setPositionEnd(true);
                     this.BaseHealth -= enemy.getEnemyType().getDamage();
                     if (this.BaseHealth < 0) {
@@ -339,16 +341,25 @@ public class GameScreen implements Screen {
                 }
 
             } else {
-                enemy.getEnemyType().changePos(-enemy.getEnemyType().getSpeed() * Gdx.graphics.getDeltaTime(), 0);
-                if (enemy.getEnemyType().getPos().x <= positions[1].x) {
-                    enemy.getEnemyType().setPos(new Vector2(positions[1].x, positions[1].y));
-                    enemy.setPosition1(true);
+                if (enemy.isPosition1()) {
+                    enemy.getEnemyType().changePos(0, enemy.getEnemyType().getSpeed() * Gdx.graphics.getDeltaTime());
+                    if (positions[2].y <= enemy.getEnemyType().getPos().y) {
+                        enemy.getEnemyType().setPos(new Vector2(positions[2].x, positions[2].y));
+                        enemy.setPosition2(true);
+                    }
+                } else {
+                    enemy.getEnemyType().changePos(enemy.getEnemyType().getSpeed() * Gdx.graphics.getDeltaTime(), 0);
+                    if (positions[1].x <= enemy.getEnemyType().getPos().x) {
+                        enemy.getEnemyType().setPos(new Vector2(positions[1].x, positions[1].y));
+                        enemy.setPosition1(true);
+                    }
                 }
             }
-
             enemy.getEnemyType().render(game.batch);
         }
-    }
+
+        }
+
 
     private void showShop(){
         shape.begin(ShapeRenderer.ShapeType.Filled);

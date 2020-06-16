@@ -4,19 +4,19 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-public class Bug01 implements EnemyType {
+public class Bug06 implements EnemyType{
 
     Vector2 pos;
-    float health = 13;
-    float damage = 10;
+    float health = 125;
+    float damage = 50;
     float width = 50;
     float height = 50;
     Texture image;
 
-    float speed = 200;
+    float speed = 250;
 
 
-    public Bug01(float x, float y, float healthFactor) {
+    public Bug06(float x, float y, float healthFactor) {
         this.image = new Texture("bug01.png");
         this.health *= healthFactor;
 
@@ -72,6 +72,4 @@ public class Bug01 implements EnemyType {
     public float getSpeed() {
         return speed;
     }
-
-
 }

@@ -10,7 +10,7 @@ public class PositionsMap01 {
 
     public PositionsMap01(EnemyType enemy) {
         if(enemy instanceof Bug01)
-        this.bug01 = (Bug01) enemy;
+            this.bug01 = (Bug01) enemy;
     }
 
     public boolean isPosition1() {
@@ -31,5 +31,9 @@ public class PositionsMap01 {
 
     public EnemyType getEnemyType() {
         return bug01;
+    }
+
+    public boolean isDead(){
+        return this.bug01.isDead();
     }
 }
