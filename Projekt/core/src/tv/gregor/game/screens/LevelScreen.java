@@ -90,7 +90,7 @@ public class LevelScreen implements Screen{
 
         //Map 1 choose
         game.batch.draw(map1, 200, 500, MAP_WIDTH, MAP_HEIGHT);
-        if (Gdx.input.getX() < 200 + MAP_WIDTH && Gdx.input.getX() > 200 && Main.HEIGHT - Gdx.input.getY() < Gdx.graphics.getHeight()-500 + MAP_HEIGHT && Main.HEIGHT - Gdx.input.getY() > MAP_HEIGHT) {
+        if (Gdx.input.getX() < 200 + MAP_WIDTH && Gdx.input.getX() > 200 && Main.HEIGHT - Gdx.input.getY() < 500 + MAP_HEIGHT && Main.HEIGHT - Gdx.input.getY() > 500) {
             if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 game.setScreen(new GameScreen(game));
             }
@@ -98,7 +98,7 @@ public class LevelScreen implements Screen{
 
         //Map 2 choose
         game.batch.draw(map2, 800, 500, MAP_WIDTH, MAP_HEIGHT);
-        if (Gdx.input.getX() < 800 + MAP_WIDTH && Gdx.input.getX() > MAP_WIDTH && Main.HEIGHT - Gdx.input.getY() < Gdx.graphics.getHeight()-500 + MAP_HEIGHT && Main.HEIGHT - Gdx.input.getY() > MAP_HEIGHT) {
+        if (Gdx.input.getX() < 800 + MAP_WIDTH && Gdx.input.getX() > 800 && Main.HEIGHT - Gdx.input.getY() < 500 + MAP_HEIGHT && Main.HEIGHT - Gdx.input.getY() > 500) {
             if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 game.setScreen(new GameScreen2(game));
             }
@@ -106,7 +106,7 @@ public class LevelScreen implements Screen{
 
         //Map 3 choose
         game.batch.draw(map3, 1400, 500, MAP_WIDTH, MAP_HEIGHT);
-        if (Gdx.input.getX() < 1400 + MAP_WIDTH && Gdx.input.getX() > MAP_WIDTH && Main.HEIGHT - Gdx.input.getY() < Gdx.graphics.getHeight()-500 + MAP_HEIGHT && Main.HEIGHT - Gdx.input.getY() > MAP_HEIGHT) {
+        if (Gdx.input.getX() < 1400 + MAP_WIDTH && Gdx.input.getX() > 1400 && Main.HEIGHT - Gdx.input.getY() < 500 + MAP_HEIGHT && Main.HEIGHT - Gdx.input.getY() > 500) {
             if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 game.setScreen(new GameScreen(game));
             }

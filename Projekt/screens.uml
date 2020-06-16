@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>tv.gregor.game.screens</OriginalElement>
+  <nodes>
+    <node x="0.0" y="1542.0">tv.gregor.game.screens.GameOverScreen</node>
+    <node x="0.0" y="0.0">tv.gregor.game.screens.GameScreen2</node>
+    <node x="197.04761904761907" y="958.0">tv.gregor.game.screens.LevelScreen</node>
+    <node x="273.0" y="220.0">tv.gregor.game.screens.MainMenuScreen</node>
+    <node x="128.62500000000003" y="2082.0">tv.gregor.game.screens.GameScreen</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="tv.gregor.game.screens.LevelScreen" target="tv.gregor.game.screens.GameScreen">
+      <point x="63.25" y="267.0" />
+      <point x="386.79761904761904" y="2057.0" />
+      <point x="318.375" y="2057.0" />
+      <point x="63.25" y="-454.0" />
+    </edge>
+    <edge source="tv.gregor.game.screens.MainMenuScreen" target="tv.gregor.game.screens.LevelScreen">
+      <point x="47.5" y="234.0" />
+      <point x="415.5" y="933.0" />
+      <point x="407.8809523809524" y="933.0" />
+      <point x="84.33333333333331" y="-267.0" />
+    </edge>
+    <edge source="tv.gregor.game.screens.GameScreen" target="tv.gregor.game.screens.GameOverScreen">
+      <point x="-63.25" y="-454.0" />
+      <point x="191.87500000000003" y="2057.0" />
+      <point x="126.5" y="2057.0" />
+      <point x="0.0" y="245.0" />
+    </edge>
+    <edge source="tv.gregor.game.screens.LevelScreen" target="tv.gregor.game.screens.GameScreen2">
+      <point x="-84.33333333333331" y="-267.0" />
+      <point x="239.21428571428575" y="933.0" />
+      <point x="189.75" y="933.0" />
+      <point x="63.25" y="454.0" />
+    </edge>
+    <edge source="tv.gregor.game.screens.GameScreen2" target="tv.gregor.game.screens.GameOverScreen">
+      <point x="-63.25" y="454.0" />
+      <point x="-63.25" y="-245.0" />
+    </edge>
+    <edge source="tv.gregor.game.screens.GameOverScreen" target="tv.gregor.game.screens.LevelScreen">
+      <point x="63.25" y="-245.0" />
+      <point x="189.75" y="1517.0" />
+      <point x="260.29761904761904" y="1517.0" />
+      <point x="-63.25" y="267.0" />
+    </edge>
+    <edge source="tv.gregor.game.screens.LevelScreen" target="tv.gregor.game.screens.MainMenuScreen">
+      <point x="0.0" y="-267.0" />
+      <point x="323.54761904761904" y="933.0" />
+      <point x="320.5" y="933.0" />
+      <point x="-47.5" y="234.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="154.5" y="171.5" />
+  <SelectedNodes>
+    <node>tv.gregor.game.screens.GameOverScreen</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

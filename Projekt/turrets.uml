@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>tv.gregor.game.turrets</OriginalElement>
+  <nodes>
+    <node x="197.00000000000003" y="86.0">tv.gregor.game.turrets.TurretType</node>
+    <node x="4.75" y="362.0">tv.gregor.game.turrets.Turret01</node>
+    <node x="0.0" y="0.0">tv.gregor.game.turrets.Bullet</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="tv.gregor.game.turrets.Turret01" target="tv.gregor.game.turrets.TurretType">
+      <point x="85.33333333333331" y="-266.0" />
+      <point x="218.08333333333331" y="337.0" />
+      <point x="325.0" y="337.0" />
+      <point x="0.0" y="70.0" />
+    </edge>
+    <edge source="tv.gregor.game.turrets.Turret01" target="tv.gregor.game.turrets.Bullet">
+      <point x="0.0" y="-266.0" />
+      <point x="44.25" y="156.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="134.5" y="77.5" />
+  <SelectedNodes>
+    <node>tv.gregor.game.turrets.Turret01</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
