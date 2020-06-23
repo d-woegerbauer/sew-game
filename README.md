@@ -25,11 +25,11 @@ The number of lives your programm has scales with the difficulty of the game. Al
 ### Allies types
 Here are the different types of allies listed
 |names|type|costs|damage|radius|
-|--|--|--|--|--|--|
+|--|--|--|--|--|
 |byte|-|50|10|200|
 |boolean|-|75|15|175|
-|char|-|150|50|100|-  |
-|integer|-|120|25|150  |
+|char|-|150|50|100|
+|integer|-|120|25|150|
 
 
 ### Hostile types
