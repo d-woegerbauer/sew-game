@@ -1,4 +1,4 @@
-package tv.gregor.game;
+package tv.gregor.game.pathhelper;
 
 import tv.gregor.game.entities.Bug01;
 import tv.gregor.game.entities.EnemyType;
@@ -6,10 +6,11 @@ import tv.gregor.game.entities.EnemyType;
 public class PositionsMap01 {
     boolean position1 = false,positionEnd = false;
 
-    EnemyType enemyType;
+    Bug01 bug01;
 
     public PositionsMap01(EnemyType enemy) {
-        this.enemyType = enemy;
+        if(enemy instanceof Bug01)
+        this.bug01 = (Bug01) enemy;
     }
 
     public boolean isPosition1() {
@@ -29,6 +30,10 @@ public class PositionsMap01 {
     }
 
     public EnemyType getEnemyType() {
-        return this.enemyType;
+        return bug01;
+    }
+
+    public boolean isDead(){
+        return this.bug01.isDead();
     }
 }

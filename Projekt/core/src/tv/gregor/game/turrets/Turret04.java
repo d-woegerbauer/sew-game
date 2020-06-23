@@ -1,3 +1,4 @@
+
 package tv.gregor.game.turrets;
 
 import com.badlogic.gdx.Gdx;
@@ -8,10 +9,10 @@ import com.badlogic.gdx.math.Vector2;
 import tv.gregor.game.entities.Bug01;
 import tv.gregor.game.entities.EnemyType;
 
-public class Turret01 implements TurretType {
+public class Turret04 implements TurretType {
 
     Vector2 pos;
-    float damage = 10;
+    float damage = 25;
     float width = 50;
     float height = 50;
     Texture image;
@@ -20,14 +21,14 @@ public class Turret01 implements TurretType {
     public boolean rotateClockwise;
     boolean hasEnemy;
     EnemyType enemy;
-    float range = 200;
+    float range = 150;
     float timePassed;
     Bullet bullet;
     private boolean bulletIsMoving;
 
-    public Turret01(float x, float y) {
+    public Turret04(float x, float y) {
         hasEnemy = false;
-        this.image = new Texture("turret01.png");
+        this.image = new Texture("turret04.png");
         this.rotation = 90;
         pos = new Vector2(x, y);
         timePassed = 0;
@@ -109,3 +110,5 @@ public class Turret01 implements TurretType {
         return range;
     }
 }
+
+

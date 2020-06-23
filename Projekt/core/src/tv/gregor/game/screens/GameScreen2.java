@@ -20,8 +20,7 @@ import tv.gregor.game.Main;
 import tv.gregor.game.PositionsMap02;
 import tv.gregor.game.entities.*;
 import tv.gregor.game.pathhelper.PathArea;
-import tv.gregor.game.turrets.Turret01;
-import tv.gregor.game.turrets.TurretType;
+import tv.gregor.game.turrets.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -38,7 +37,7 @@ public class GameScreen2 implements Screen {
     private long lastTimeCountedRound;
 
     private boolean showShop;
-
+    private int turretToPlace;
     private float sinceChangeFPS;
     private float sinceChangeTime;
     private float frameRate;
@@ -300,25 +299,49 @@ public class GameScreen2 implements Screen {
     }
 
     private void hoverTurret(){
-        game.batch.draw(new TextureRegion(new Texture("turret01.png")), Gdx.input.getX()-25, Gdx.graphics.getHeight()-Gdx.input.getY()-25,50,50);
+        switch (turretToPlace){
+            case 1:
+                game.batch.draw(new TextureRegion(new Texture("turret01.png")), Gdx.input.getX()-25, Gdx.graphics.getHeight()-Gdx.input.getY()-25,50,50);
+                break;
+            case 2:
+                game.batch.draw(new TextureRegion(new Texture("turret02.png")), Gdx.input.getX()-25, Gdx.graphics.getHeight()-Gdx.input.getY()-25,50,50);
+                break;
+            case 3:
+                game.batch.draw(new TextureRegion(new Texture("turret03.png")), Gdx.input.getX()-25, Gdx.graphics.getHeight()-Gdx.input.getY()-25,50,50);
+                break;
+            case 4:
+                game.batch.draw(new TextureRegion(new Texture("turret04.png")), Gdx.input.getX()-25, Gdx.graphics.getHeight()-Gdx.input.getY()-25,50,50);
+                break;
+        }
         if(Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)){
             isTurretChosen = false;
         }
         if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             boolean isAllowed = true;
             for (TurretType turret : turrets) {
-                if (turret instanceof Turret01) {
-                    Turret01 turret01 = (Turret01) turret;
-                    if (turret01.isInside(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25, 50, 50))
+                    if (turret.isInside(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25, 50, 50))
                         isAllowed = false;
                 }
-            }
+
             for (PathArea pathArea : path) {
                 if (pathArea.isInside(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25, 50, 50))
                     isAllowed = false;
             }
             if (isAllowed){
-                turrets.add(new Turret01(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25));
+                switch (turretToPlace){
+                    case 1:
+                        turrets.add(new Turret01(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25));
+                        break;
+                    case 2:
+                        turrets.add(new Turret02(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25));
+                        break;
+                    case 3:
+                        turrets.add(new Turret03(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25));
+                        break;
+                    case 4:
+                        turrets.add(new Turret04(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25));
+                        break;
+                }
                 isTurretChosen = false;
                 money -= 50;
             }
@@ -362,36 +385,59 @@ public class GameScreen2 implements Screen {
 
 
     private void showShop(){
+
         shape.begin(ShapeRenderer.ShapeType.Filled);
         shape.setColor(Color.BLUE);
-        shape.rect(400,0,Gdx.graphics.getWidth()-800,100);
+        shape.rect(400, 0, Gdx.graphics.getWidth() - 800, 100);
         shape.end();
 
         game.batch.begin();
-        game.batch.draw(new TextureRegion(new Texture("turret01.png")), 450, (100-64)/2f,64,64);
-        font.draw(game.batch, money + " Gold", Gdx.graphics.getWidth()-350, 50);
-        if(money > 50) {
-            if (450 < Gdx.input.getX() && 450 + 64 > Gdx.input.getX() && (100 - 64) / 2 < Gdx.graphics.getHeight() - Gdx.input.getY() && 25 + 64 > Gdx.graphics.getHeight() - Gdx.input.getY()) {
-                if (Gdx.input.justTouched()) {
-                    isTurretChosen = true;
-                }
+        game.batch.draw(new TextureRegion(new Texture("turret01.png")), 450, (100 - 64) / 2, 64, 64);
+        game.batch.draw(new TextureRegion(new Texture("turret02.png")), 750, (100 - 64) / 2, 64, 64);
+        game.batch.draw(new TextureRegion(new Texture("turret03.png")), 1050, (100 - 64) / 2, 64, 64);
+        game.batch.draw(new TextureRegion(new Texture("turret04.png")), 1350, (100 - 64) / 2, 64, 64);
+
+        if (450 < Gdx.input.getX() && 450 + 64 > Gdx.input.getX() && (100 - 64) / 2 < Gdx.graphics.getHeight() - Gdx.input.getY() && 25 + 64 > Gdx.graphics.getHeight() - Gdx.input.getY()) {
+            if (Gdx.input.justTouched()) {
+                isTurretChosen = true;
+                turretToPlace = 1;
             }
         }
+        if (750 < Gdx.input.getX() && 750 + 64 > Gdx.input.getX() && (100 - 64) / 2 < Gdx.graphics.getHeight() - Gdx.input.getY() && 25 + 64 > Gdx.graphics.getHeight() - Gdx.input.getY()) {
+            if (Gdx.input.justTouched()) {
+                isTurretChosen = true;
+                turretToPlace = 2;
+            }
+        }
+        if (1050 < Gdx.input.getX() && 1050 + 64 > Gdx.input.getX() && (100 - 64) / 2 < Gdx.graphics.getHeight() - Gdx.input.getY() && 25 + 64 > Gdx.graphics.getHeight() - Gdx.input.getY()) {
+            if (Gdx.input.justTouched()) {
+                isTurretChosen = true;
+                turretToPlace = 3;
+            }
+        }
+        if (1350 < Gdx.input.getX() && 1350 + 64 > Gdx.input.getX() && (100 - 64) / 2 < Gdx.graphics.getHeight() - Gdx.input.getY() && 25 + 64 > Gdx.graphics.getHeight() - Gdx.input.getY()) {
+            if (Gdx.input.justTouched()) {
+                isTurretChosen = true;
+                turretToPlace = 4;
+            }
+        }
+
         game.batch.end();
+
     }
 
     private void showTurrets(TurretType turretType){
-        if(turretType instanceof Turret01) {
-            Turret01 turret01 = (Turret01) turretType;
-            if (!turret01.hasEnemy()) {
-                for (PositionsMap02 enemy : enemies) {
-                        if (turret01.getPos().dst(enemy.getEnemyType().getPos()) < turret01.getRange()) {
-                            turret01.setEnemy(enemy.getEnemyType());
-                        }
+        if (!turretType.hasEnemy()) {
+            for (PositionsMap02 enemy : enemies) {
+
+                if (turretType.getPos().dst(enemy.getEnemyType().getPos()) < turretType.getRange()) {
+                    turretType.setEnemy(enemy.getEnemyType());
                 }
+
             }
-            turret01.render(game.batch);
         }
+        turretType.render(game.batch);
+
     }
 
 }

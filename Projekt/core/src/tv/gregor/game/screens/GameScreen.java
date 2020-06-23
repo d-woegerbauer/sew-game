@@ -17,11 +17,10 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 import tv.gregor.game.Main;
-import tv.gregor.game.PositionsMap02;
+import tv.gregor.game.PositionsMap01;
 import tv.gregor.game.entities.*;
 import tv.gregor.game.pathhelper.PathArea;
-import tv.gregor.game.turrets.Turret01;
-import tv.gregor.game.turrets.TurretType;
+import tv.gregor.game.turrets.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -57,14 +56,14 @@ public class GameScreen implements Screen {
 
     private OrthogonalTiledMapRenderer renderer;
     private TiledMap map;
-    private ArrayList<PositionsMap02> enemies;
+    private ArrayList<PositionsMap01> enemies;
 
     private FreeTypeFontGenerator generator;
 
     private ShapeRenderer shape;
 
     private ArrayList<TurretType> turrets;
-
+    private int turretToPlace;
     private Main game;
 
     /**
@@ -168,8 +167,8 @@ public class GameScreen implements Screen {
         }
 
         //removing enemies
-        for (Iterator<PositionsMap02> iter = enemies.iterator(); iter.hasNext(); ) {
-            PositionsMap02 it = iter.next();
+        for (Iterator<PositionsMap01> iter = enemies.iterator(); iter.hasNext(); ) {
+            PositionsMap01 it = iter.next();
             if (it.isPositionEnd() || it.getEnemyType().isDead()) {
 
                 iter.remove();
@@ -182,7 +181,7 @@ public class GameScreen implements Screen {
 
         // After the round
         if (!isDone) {
-            for (PositionsMap02 enemy : enemies) {
+            for (PositionsMap01 enemy : enemies) {
                 showEnemy(enemy);
                 sinceChangeTime = 0;
             }
@@ -264,41 +263,54 @@ public class GameScreen implements Screen {
             System.out.println(random);
             switch (random){
                 case 1:
-                    enemies.add(new PositionsMap02(new Bug01(positions[0].x + i * 40, positions[0].y, 1)));
+                    enemies.add(new PositionsMap01(new Bug01(positions[0].x + i * 40, positions[0].y, 1)));
                     break;
                 case 2:
-                    enemies.add(new PositionsMap02(new Bug02(positions[0].x + i * 40, positions[0].y, 1)));
+                    enemies.add(new PositionsMap01(new Bug02(positions[0].x + i * 40, positions[0].y, 1)));
                     break;
                 case 3:
-                    enemies.add(new PositionsMap02(new Bug03(positions[0].x + i * 40, positions[0].y, 1)));
+                    enemies.add(new PositionsMap01(new Bug03(positions[0].x + i * 40, positions[0].y, 1)));
                     break;
                 case 4:
-                    enemies.add(new PositionsMap02(new Bug04(positions[0].x + i * 40, positions[0].y, 1)));
+                    enemies.add(new PositionsMap01(new Bug04(positions[0].x + i * 40, positions[0].y, 1)));
                     break;
                 case 5:
-                    enemies.add(new PositionsMap02(new Bug05(positions[0].x + i * 40, positions[0].y, 1)));
+                    enemies.add(new PositionsMap01(new Bug05(positions[0].x + i * 40, positions[0].y, 1)));
                     break;
                 case 6:
-                    enemies.add(new PositionsMap02(new Bug06(positions[0].x + i * 40, positions[0].y, 1)));
+                    enemies.add(new PositionsMap01(new Bug06(positions[0].x + i * 40, positions[0].y, 1)));
                     break;
                 case 7:
-                    enemies.add(new PositionsMap02(new Bug07(positions[0].x + i * 40, positions[0].y, 1)));
+                    enemies.add(new PositionsMap01(new Bug07(positions[0].x + i * 40, positions[0].y, 1)));
                     break;
                 case 8:
-                    enemies.add(new PositionsMap02(new Bug08(positions[0].x + i * 40, positions[0].y, 1)));
+                    enemies.add(new PositionsMap01(new Bug08(positions[0].x + i * 40, positions[0].y, 1)));
                     break;
                 case 9:
-                    enemies.add(new PositionsMap02(new Bug09(positions[0].x + i * 40, positions[0].y, 1)));
+                    enemies.add(new PositionsMap01(new Bug09(positions[0].x + i * 40, positions[0].y, 1)));
                     break;
                 case 10:
-                    enemies.add(new PositionsMap02(new Bug10(positions[0].x + i * 40, positions[0].y, 1)));
+                    enemies.add(new PositionsMap01(new Bug10(positions[0].x + i * 40, positions[0].y, 1)));
                     break;
             }
         }
     }
 
     private void hoverTurret(){
-        game.batch.draw(new TextureRegion(new Texture("turret01.png")), Gdx.input.getX()-25, Gdx.graphics.getHeight()-Gdx.input.getY()-25,50,50);
+        switch (turretToPlace){
+            case 1:
+                game.batch.draw(new TextureRegion(new Texture("turret01.png")), Gdx.input.getX()-25, Gdx.graphics.getHeight()-Gdx.input.getY()-25,50,50);
+                break;
+            case 2:
+                game.batch.draw(new TextureRegion(new Texture("turret02.png")), Gdx.input.getX()-25, Gdx.graphics.getHeight()-Gdx.input.getY()-25,50,50);
+                break;
+            case 3:
+                game.batch.draw(new TextureRegion(new Texture("turret03.png")), Gdx.input.getX()-25, Gdx.graphics.getHeight()-Gdx.input.getY()-25,50,50);
+                break;
+            case 4:
+                game.batch.draw(new TextureRegion(new Texture("turret04.png")), Gdx.input.getX()-25, Gdx.graphics.getHeight()-Gdx.input.getY()-25,50,50);
+                break;
+        }
         if(Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)){
             isTurretChosen = false;
         }
@@ -316,14 +328,30 @@ public class GameScreen implements Screen {
                     isAllowed = false;
             }
             if (isAllowed){
-                turrets.add(new Turret01(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25));
+                switch (turretToPlace){
+                    case 1:
+                        turrets.add(new Turret01(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25));
+                        money -= 50;
+                        break;
+                    case 2:
+                        turrets.add(new Turret02(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25));
+                        money -= 75;
+                        break;
+                    case 3:
+                        turrets.add(new Turret03(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25));
+                        money -= 150;
+                        break;
+                    case 4:
+                        turrets.add(new Turret04(Gdx.input.getX() - 25, Gdx.graphics.getHeight() - Gdx.input.getY() - 25));
+                        money -= 120;
+                        break;
+                }
                 isTurretChosen = false;
-                money -= 50;
             }
         }
     }
 
-    private void showEnemy(PositionsMap02 enemy) {
+    private void showEnemy(PositionsMap01 enemy) {
         if (!enemy.isPositionEnd()) {
 
             if (enemy.isPosition1()) {
@@ -351,36 +379,61 @@ public class GameScreen implements Screen {
     }
 
     private void showShop(){
+
         shape.begin(ShapeRenderer.ShapeType.Filled);
         shape.setColor(Color.BLUE);
-        shape.rect(400,0,Gdx.graphics.getWidth()-800,100);
+        shape.rect(400, 0, Gdx.graphics.getWidth() - 800, 100);
         shape.end();
 
         game.batch.begin();
-        game.batch.draw(new TextureRegion(new Texture("turret01.png")), 450, (100-64)/2f,64,64);
+        game.batch.draw(new TextureRegion(new Texture("turret01.png")), 450, (100 - 64) / 2, 64, 64);
+        game.batch.draw(new TextureRegion(new Texture("turret02.png")), 750, (100 - 64) / 2, 64, 64);
+        game.batch.draw(new TextureRegion(new Texture("turret03.png")), 1050, (100 - 64) / 2, 64, 64);
+        game.batch.draw(new TextureRegion(new Texture("turret04.png")), 1350, (100 - 64) / 2, 64, 64);
         font.draw(game.batch, money + " Gold", Gdx.graphics.getWidth()-350, 50);
-        if(money > 50) {
-            if (450 < Gdx.input.getX() && 450 + 64 > Gdx.input.getX() && (100 - 64) / 2 < Gdx.graphics.getHeight() - Gdx.input.getY() && 25 + 64 > Gdx.graphics.getHeight() - Gdx.input.getY()) {
-                if (Gdx.input.justTouched()) {
-                    isTurretChosen = true;
-                }
+
+        if (450 < Gdx.input.getX() && 450 + 64 > Gdx.input.getX() && (100 - 64) / 2 < Gdx.graphics.getHeight() - Gdx.input.getY() && 25 + 64 > Gdx.graphics.getHeight() - Gdx.input.getY()) {
+            if (Gdx.input.justTouched() && money >= 50 ) {
+                isTurretChosen = true;
+                turretToPlace = 1;
             }
         }
+        if (750 < Gdx.input.getX() && 750 + 64 > Gdx.input.getX() && (100 - 64) / 2 < Gdx.graphics.getHeight() - Gdx.input.getY() && 25 + 64 > Gdx.graphics.getHeight() - Gdx.input.getY()) {
+            if (Gdx.input.justTouched()&& money >= 75) {
+                isTurretChosen = true;
+                turretToPlace = 2;
+            }
+        }
+        if (1050 < Gdx.input.getX() && 1050 + 64 > Gdx.input.getX() && (100 - 64) / 2 < Gdx.graphics.getHeight() - Gdx.input.getY() && 25 + 64 > Gdx.graphics.getHeight() - Gdx.input.getY()) {
+            if (Gdx.input.justTouched() && money >= 150) {
+                isTurretChosen = true;
+                turretToPlace = 3;
+            }
+        }
+        if (1350 < Gdx.input.getX() && 1350 + 64 > Gdx.input.getX() && (100 - 64) / 2 < Gdx.graphics.getHeight() - Gdx.input.getY() && 25 + 64 > Gdx.graphics.getHeight() - Gdx.input.getY()) {
+            if (Gdx.input.justTouched() && money >= 120) {
+                isTurretChosen = true;
+                turretToPlace = 4;
+            }
+        }
+
         game.batch.end();
+
     }
 
     private void showTurrets(TurretType turretType){
-        if(turretType instanceof Turret01) {
-            Turret01 turret01 = (Turret01) turretType;
-            if (!turret01.hasEnemy()) {
-                for (PositionsMap02 enemy : enemies) {
-                        if (turret01.getPos().dst(enemy.getEnemyType().getPos()) < turret01.getRange()) {
-                            turret01.setEnemy(enemy.getEnemyType());
-                        }
+        if (!turretType.hasEnemy()) {
+            for (PositionsMap01 enemy : enemies) {
+
+                if (turretType.getPos().dst(enemy.getEnemyType().getPos()) < turretType.getRange()) {
+                    turretType.setEnemy(enemy.getEnemyType());
                 }
+
             }
-            turret01.render(game.batch);
         }
+        turretType.render(game.batch);
+
     }
+
 
 }
